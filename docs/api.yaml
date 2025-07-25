@@ -1,0 +1,232 @@
+openapi: 3.0.0
+info:
+  title: Calculator API
+  description: A REST API for performing basic arithmetic operations and retrieving calculation history
+  version: '1.0'
+
+servers:
+  - url: http://localhost:8080/api/v1/calculator
+    description: Base API path
+
+paths:
+  /addition:
+    post:
+      summary: Perform addition
+      description: Adds two numbers and returns their sum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - summand_one
+                - summand_two
+              properties:
+                summand_one:
+                  type: number
+                  format: double
+                  description: First number to add
+                summand_two:
+                  type: number
+                  format: double
+                  description: Second number to add
+      responses:
+        '200':
+          description: Successful addition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sum:
+                    type: number
+                    format: double
+                    description: Result of the addition
+        '400':
+          description: Invalid input or calculation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /subtraction:
+    post:
+      summary: Perform subtraction
+      description: Subtracts the subtrahend from the minuend
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - minuend
+                - subtrahend
+              properties:
+                minuend:
+                  type: number
+                  format: double
+                  description: Number to subtract from
+                subtrahend:
+                  type: number
+                  format: double
+                  description: Number to subtract
+      responses:
+        '200':
+          description: Successful subtraction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  difference:
+                    type: number
+                    format: double
+                    description: Result of the subtraction
+        '400':
+          description: Invalid input or calculation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /multiplication:
+    post:
+      summary: Perform multiplication
+      description: Multiplies two numbers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - factor_one
+                - factor_two
+              properties:
+                factorOne:
+                  type: number
+                  format: double
+                  description: First factor
+                factorTwo:
+                  type: number
+                  format: double
+                  description: Second factor
+      responses:
+        '200':
+          description: Successful multiplication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    type: number
+                    format: double
+                    description: Result of the multiplication
+        '400':
+          description: Invalid input or calculation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /division:
+    post:
+      summary: Perform division
+      description: Divides the dividend by the divisor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dividend
+                - divisor
+              properties:
+                dividend:
+                  type: number
+                  format: double
+                  description: Number to be divided
+                divisor:
+                  type: number
+                  format: double
+                  description: Number to divide by
+      responses:
+        '200':
+          description: Successful division
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quotient:
+                    type: number
+                    format: double
+                    description: Result of the division
+        '400':
+          description: Invalid input or calculation error (including division by zero)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /recent:
+    get:
+      summary: Get recent calculations
+      description: Retrieves a paginated list of recent calculations
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          description: Page number for pagination
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of items per page
+      responses:
+        '200':
+          description: List of recent calculations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  calculations:
+                    type: array
+                    items:
+                      type: string
+                      description: String representation of the calculation
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMetadata'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+    PaginationMetadata:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalCount:
+          type: integer
+          description: Total number of items

@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
 	"fmt"
+	"github.com/leandersteiner/interview-assignment/internal/calculator"
+	"github.com/leandersteiner/interview-assignment/internal/handlers"
 	"log/slog"
 	"net/http"
 	"os"
@@ -15,20 +18,43 @@ import (
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdin, &slog.HandlerOptions{}))
 
-	if err := run(logger); err != nil {
+	persistFlag := flag.Bool("persist", false, "enable persistence")
+	flag.Parse()
+
+	if err := run(logger, *persistFlag); err != nil {
 		logger.Error("startup", "error", err)
 		os.Exit(1)
 	}
 }
 
-func run(log *slog.Logger) error {
-	mux := http.NewServeMux()
+func run(log *slog.Logger, shouldPersist bool) error {
+	var mux http.Handler
 
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/plain")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello, World!"))
-	})
+	if shouldPersist {
+		log.Info("using JSON store")
+		store, err := calculator.NewJSONStore()
+		if err != nil {
+			return fmt.Errorf("failed to create JSON store: %w", err)
+		}
+		defer func(store *calculator.JSONStore) {
+			err := store.Save()
+			if err != nil {
+				log.Error("could not save store", "error", err)
+			}
+			log.Info("store saved")
+		}(store)
+		mux = handlers.NewMux(handlers.MuxConfig{
+			Logger: log,
+			Store:  store,
+		})
+	} else {
+		log.Info("using in-memory store")
+		store := calculator.NewResultStore()
+		mux = handlers.NewMux(handlers.MuxConfig{
+			Logger: log,
+			Store:  store,
+		})
+	}
 
 	server := &http.Server{
 		Addr:        "127.0.0.1:8080",

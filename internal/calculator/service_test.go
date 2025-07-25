@@ -87,7 +87,7 @@ func TestCalculator_Add(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := New(tt.precision)
+			c := NewService(tt.precision, NewResultStore())
 			got, err := c.Add(tt.a, tt.b)
 
 			if tt.wantErr != nil {
@@ -195,12 +195,12 @@ func TestCalculator_Subtract(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := New(tt.precision)
-			got, err := c.Subtract(tt.a, tt.b)
+			c := NewService(tt.precision, NewResultStore())
+			got, err := c.Sub(tt.a, tt.b)
 
 			if tt.wantErr != nil {
 				if err == nil || err.Error() != tt.wantErr.Error() {
-					t.Errorf("Subtract() error = %v, wantErr %v", err, tt.wantErr)
+					t.Errorf("Sub() error = %v, wantErr %v", err, tt.wantErr)
 				}
 				return
 			}
@@ -211,11 +211,11 @@ func TestCalculator_Subtract(t *testing.T) {
 			}
 
 			if got.Value != tt.wantValue {
-				t.Errorf("Subtract() got value = %v, want %v", got.Value, tt.wantValue)
+				t.Errorf("Sub() got value = %v, want %v", got.Value, tt.wantValue)
 			}
 
 			if got.Expression != tt.wantExpr {
-				t.Errorf("Subtract() got expression = %q, want %q", got.Expression, tt.wantExpr)
+				t.Errorf("Sub() got expression = %q, want %q", got.Expression, tt.wantExpr)
 			}
 		})
 	}
@@ -312,12 +312,12 @@ func TestCalculator_Multiply(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := New(tt.precision)
-			got, err := c.Multiply(tt.a, tt.b)
+			c := NewService(tt.precision, NewResultStore())
+			got, err := c.Mul(tt.a, tt.b)
 
 			if tt.wantErr != nil {
 				if err == nil || err.Error() != tt.wantErr.Error() {
-					t.Errorf("Multiply() error = %v, wantErr %v", err, tt.wantErr)
+					t.Errorf("Mul() error = %v, wantErr %v", err, tt.wantErr)
 				}
 				return
 			}
@@ -328,11 +328,11 @@ func TestCalculator_Multiply(t *testing.T) {
 			}
 
 			if got.Value != tt.wantValue {
-				t.Errorf("Multiply() got value = %v, want %v", got.Value, tt.wantValue)
+				t.Errorf("Mul() got value = %v, want %v", got.Value, tt.wantValue)
 			}
 
 			if got.Expression != tt.wantExpr {
-				t.Errorf("Multiply() got expression = %q, want %q", got.Expression, tt.wantExpr)
+				t.Errorf("Mul() got expression = %q, want %q", got.Expression, tt.wantExpr)
 			}
 		})
 	}
@@ -425,12 +425,12 @@ func TestCalculator_Divide(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := New(tt.precision)
-			got, err := c.Divide(tt.a, tt.b)
+			c := NewService(tt.precision, NewResultStore())
+			got, err := c.Div(tt.a, tt.b)
 
 			if tt.wantErr != nil {
 				if err == nil || err.Error() != tt.wantErr.Error() {
-					t.Errorf("Divide() error = %v, wantErr %v", err, tt.wantErr)
+					t.Errorf("Div() error = %v, wantErr %v", err, tt.wantErr)
 				}
 				return
 			}
@@ -441,11 +441,11 @@ func TestCalculator_Divide(t *testing.T) {
 			}
 
 			if got.Value != tt.wantValue {
-				t.Errorf("Divide() got value = %v, want %v", got.Value, tt.wantValue)
+				t.Errorf("Div() got value = %v, want %v", got.Value, tt.wantValue)
 			}
 
 			if got.Expression != tt.wantExpr {
-				t.Errorf("Divide() got expression = %q, want %q", got.Expression, tt.wantExpr)
+				t.Errorf("Div() got expression = %q, want %q", got.Expression, tt.wantExpr)
 			}
 		})
 	}
