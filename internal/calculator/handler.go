@@ -25,12 +25,12 @@ func NewHandler(service *Service, getter getter) *Handler {
 func (h *Handler) Addition(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	req := &AdditionRequest{}
 	if err := web.Decode(r, req); err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	result, err := h.service.Add(req.SummandOne, req.SummandTwo)
 	if err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	resp := &AdditionResponse{
@@ -42,12 +42,12 @@ func (h *Handler) Addition(ctx context.Context, w http.ResponseWriter, r *http.R
 func (h *Handler) Subtraction(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	req := &SubtractionRequest{}
 	if err := web.Decode(r, req); err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	result, err := h.service.Sub(req.Minuend, req.Subtrahend)
 	if err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	resp := &SubtractionResponse{
@@ -59,12 +59,12 @@ func (h *Handler) Subtraction(ctx context.Context, w http.ResponseWriter, r *htt
 func (h *Handler) Multiplication(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	req := &MultiplicationRequest{}
 	if err := web.Decode(r, req); err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	result, err := h.service.Mul(req.FactorOne, req.FactorTwo)
 	if err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	resp := &MultiplicationResponse{
@@ -76,12 +76,12 @@ func (h *Handler) Multiplication(ctx context.Context, w http.ResponseWriter, r *
 func (h *Handler) Division(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	req := &DivisionRequest{}
 	if err := web.Decode(r, req); err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	result, err := h.service.Div(req.Dividend, req.Divisor)
 	if err != nil {
-		return web.NewError(400, err.Error())
+		return web.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	resp := &DivisionResponse{
