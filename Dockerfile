@@ -9,8 +9,7 @@ COPY ./ ./
 
 RUN go build ./cmd/main.go
 
-FROM alpine
+FROM scratch
 COPY --from=builder /home/backend/main .
-RUN chmod +x ./main
 
 CMD ["./main", "--persist"]
